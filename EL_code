@@ -1,0 +1,40 @@
+
+
+{12/9/21 edit: I think candlestatus needs live candle, so we can't go back in history to find
+				if a candle was crazy or not. We would need to contruct it off the 1min chart and printStatement 
+				to notify us that a 5minbar we're looking at is "crazy" or not.
+				Another idea would be to plot on the 1min chart, but then that has to be somewhere on the screen, 
+				which you are not actually using the 1min chart in your analysis. 
+				}
+
+{If candle is crazy then signify it.
+	Crazy candle is a candle that moves it's full capacity(ATR) within 50% of that canlde life. 
+	}
+	
+	
+		
+{ATR:
+	1) normal built-in ATR. without custom time. May be able to get away with making session time only the day.
+	2) Home-built ATR with custom time.
+}
+
+//CandleStatus
+
+// TrueRange / AvgTrueRange
+// Timespent / TotalTimeSpent .. = candlestatus
+
+{truerange: 50, ATR:75,}
+
+Vars:
+	ATR(0),
+	RangeCompared_to_normal(0);
+
+ATR = avgtruerange(24);
+RangeCompared_to_normal = iff(ATR<>0, Truerange/ATR, 1);
+
+If RangeCompared_to_normal > 1 and candlestatus < 50 then 
+begin
+
+	plot1(close);
+	print(date, "   ", time);
+end;
